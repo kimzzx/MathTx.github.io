@@ -1173,7 +1173,328 @@
                             <button onclick="trackLessonCompletion('derivatives')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">เรียนจบ</button>
                         </div>
                     `
-                }
+                },
+                'derivatives': {
+                    title: 'อนุพันธ์',
+                    content: `
+                        <h1 class="text-3xl font-bold mb-6">อนุพันธ์</h1>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+                        <p class="mb-4">อนุพันธ์ของฟังก์ชัน $f(x)$ คือ ลิมิต:</p>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4 text-center">
+                            <p>$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">กฎการหาอนุพันธ์</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p><strong>กฎกำลัง:</strong> $\\frac{d}{dx}[x^n] = nx^{n-1}$</p>
+                            <p><strong>กฎผลรวม:</strong> $\\frac{d}{dx}[f(x) + g(x)] = f'(x) + g'(x)$</p>
+                            <p><strong>กฎผลคูณ:</strong> $\\frac{d}{dx}[f(x)g(x)] = f'(x)g(x) + f(x)g'(x)$</p>
+                            <p><strong>กฎผลหาร:</strong> $\\frac{d}{dx}\\left[\\frac{f(x)}{g(x)}\\right] = \\frac{f'(x)g(x) - f(x)g'(x)}{[g(x)]^2}$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">อนุพันธ์ของฟังก์ชันพื้นฐาน</h2>
+                        <div class="bg-green-50 p-4 rounded-lg mb-4">
+                            <p>$\\frac{d}{dx}[\\sin x] = \\cos x$</p>
+                            <p>$\\frac{d}{dx}[\\cos x] = -\\sin x$</p>
+                            <p>$\\frac{d}{dx}[e^x] = e^x$</p>
+                            <p>$\\frac{d}{dx}[\\ln x] = \\frac{1}{x}$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">การประยุกต์</h2>
+                        <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+                            <p><strong>ความชันของเส้นสัมผัส:</strong> ความชันที่จุด $(a, f(a))$ คือ $f'(a)$</p>
+                            <p><strong>อัตราการเปลี่ยนแปลง:</strong> อนุพันธ์แสดงอัตราการเปลี่ยนแปลงทันที</p>
+                            <p><strong>การหาค่าสูงสุดและต่ำสุด:</strong> ใช้ $f'(x) = 0$</p>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('x^2')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูกราฟตัวอย่าง</button>
+                            <button onclick="trackLessonCompletion('derivatives')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">เรียนจบ</button>
+                        </div>
+                    `
+                },
+                'derivatives': {
+                    title: 'อนุพันธ์',
+                    content: `
+                        <h1 class="text-3xl font-bold mb-6">อนุพันธ์</h1>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+                        <p class="mb-4">อนุพันธ์ของฟังก์ชัน $f(x)$ คือ ลิมิต:</p>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4 text-center">
+                            <p>$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">กฎการหาอนุพันธ์</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p><strong>กฎกำลัง:</strong> $\\frac{d}{dx}[x^n] = nx^{n-1}$</p>
+                            <p><strong>กฎผลรวม:</strong> $\\frac{d}{dx}[f(x) + g(x)] = f'(x) + g'(x)$</p>
+                            <p><strong>กฎผลคูณ:</strong> $\\frac{d}{dx}[f(x)g(x)] = f'(x)g(x) + f(x)g'(x)$</p>
+                            <p><strong>กฎผลหาร:</strong> $\\frac{d}{dx}\\left[\\frac{f(x)}{g(x)}\\right] = \\frac{f'(x)g(x) - f(x)g'(x)}{[g(x)]^2}$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">อนุพันธ์ของฟังก์ชันพื้นฐาน</h2>
+                        <div class="bg-green-50 p-4 rounded-lg mb-4">
+                            <p>$\\frac{d}{dx}[\\sin x] = \\cos x$</p>
+                            <p>$\\frac{d}{dx}[\\cos x] = -\\sin x$</p>
+                            <p>$\\frac{d}{dx}[e^x] = e^x$</p>
+                            <p>$\\frac{d}{dx}[\\ln x] = \\frac{1}{x}$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">การประยุกต์</h2>
+                        <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+                            <p><strong>ความชันของเส้นสัมผัส:</strong> ความชันที่จุด $(a, f(a))$ คือ $f'(a)$</p>
+                            <p><strong>อัตราการเปลี่ยนแปลง:</strong> อนุพันธ์แสดงอัตราการเปลี่ยนแปลงทันที</p>
+                            <p><strong>การหาค่าสูงสุดและต่ำสุด:</strong> ใช้ $f'(x) = 0$</p>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('x^2')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูกราฟตัวอย่าง</button>
+                            <button onclick="trackLessonCompletion('derivatives')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">เรียนจบ</button>
+                        </div>
+                    `
+                },
+                'integrals': {
+                title: 'ปริพันธ์',
+                content: `
+                        <h1 class="text-3xl font-bold mb-6">ปริพันธ์</h1>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+                        <p class="mb-4">ปริพันธ์ของฟังก์ชัน $f(x)$ คือ กระบวนการหา "พื้นที่ใต้กราฟ" ของฟังก์ชัน:</p>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4 text-center">
+                            <p>$\\int f(x) \\, dx$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">กฎการหาปริพันธ์</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p><strong>กฎกำลัง:</strong> $\\int x^n \\, dx = \\frac{x^{n+1}}{n+1} + C, \\; n \\neq -1$</p>
+                            <p><strong>กฎผลรวม:</strong> $\\int [f(x) + g(x)] \\, dx = \\int f(x) \\, dx + \\int g(x) \\, dx$</p>
+                            <p><strong>กฎผลต่าง:</strong> $\\int [f(x) - g(x)] \\, dx = \\int f(x) \\, dx - \\int g(x) \\, dx$</p>
+                            <p><strong>กฎค่าคงที่:</strong> $\\int k f(x) \\, dx = k \\int f(x) \\, dx$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">ปริพันธ์ของฟังก์ชันพื้นฐาน</h2>
+                        <div class="bg-green-50 p-4 rounded-lg mb-4">
+                            <p>$\\int \\sin x \\, dx = -\\cos x + C$</p>
+                            <p>$\\int \\cos x \\, dx = \\sin x + C$</p>
+                            <p>$\\int e^x \\, dx = e^x + C$</p>
+                            <p>$\\int \\frac{1}{x} \\, dx = \\ln|x| + C$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">การประยุกต์</h2>
+                        <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+                            <p><strong>พื้นที่ใต้กราฟ:</strong> $\\int_a^b f(x) \\, dx$ คือพื้นที่ระหว่างกราฟกับแกน $x$</p>
+                            <p><strong>ปริมาตร:</strong> ใช้ปริพันธ์ในการหาปริมาตรร่างหมุน</p>
+                            <p><strong>การเคลื่อนที่:</strong> ความเร็ว → ระยะทางโดยใช้ปริพันธ์</p>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('x^2')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูกราฟตัวอย่าง</button>
+                            <button onclick="trackLessonCompletion('integrals')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">เรียนจบ</button>
+                        </div>
+                    `
+                },
+                'limits': {
+                title: 'ลิมิตเบื้องต้น',
+                content: `
+                        <h1 class="text-3xl font-bold mb-6">ลิมิตเบื้องต้น</h1>
+        
+                        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+                        <p class="mb-4">ลิมิตของฟังก์ชัน $f(x)$ เมื่อ $x$ เข้าใกล้ค่า $a$ คือค่าที่ฟังก์ชันเข้าใกล้เมื่อ $x$ ใกล้ $a$:</p>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4 text-center">
+                            <p>$\\lim_{x \\to a} f(x) = L$</p>
+                        </div>
+        
+                        <h2 class="text-2xl font-semibold mb-4">กฎการหาลิมิต</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p><strong>ลิมิตผลบวก:</strong> $\\lim_{x \\to a} [f(x) + g(x)] = \\lim_{x \\to a} f(x) + \\lim_{x \\to a} g(x)$</p>
+                            <p><strong>ลิมิตผลคูณ:</strong> $\\lim_{x \\to a} [f(x)g(x)] = \\lim_{x \\to a} f(x) \\cdot \\lim_{x \\to a} g(x)$</p>
+                            <p><strong>ลิมิตผลหาร:</strong> $\\lim_{x \\to a} \\frac{f(x)}{g(x)} = \\frac{\\lim_{x \\to a} f(x)}{\\lim_{x \\to a} g(x)}, \\text{ถ้า } \\lim_{x \\to a} g(x) \\neq 0$</p>
+                            <p><strong>ลิมิตกำลัง:</strong> $\\lim_{x \\to a} [f(x)]^n = [\\lim_{x \\to a} f(x)]^n$</p>
+                        </div>
+        
+                        <h2 class="text-2xl font-semibold mb-4">ลิมิตฟังก์ชันพื้นฐาน</h2>
+                        <div class="bg-green-50 p-4 rounded-lg mb-4">
+                            <p>$\\lim_{x \\to 0} \\sin x / x = 1$</p>
+                            <p>$\\lim_{x \\to 0} (1 + x)^{1/x} = e$</p>
+                            <p>$\\lim_{x \\to a} c = c$</p>
+                            <p>$\\lim_{x \\to a} x = a$</p>
+                        </div>
+        
+                        <h2 class="text-2xl font-semibold mb-4">การประยุกต์</h2>
+                        <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+                            <p><strong>ตรวจสอบค่าที่ไม่ต่อเนื่อง:</strong> ใช้ลิมิตเพื่อดูพฤติกรรมใกล้จุดที่ไม่ต่อเนื่อง</p>
+                            <p><strong>คำนวณอนุพันธ์:</strong> อนุพันธ์ใช้ลิมิต $\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$</p>
+                            <p><strong>วิเคราะห์อัตราการเปลี่ยนแปลง:</strong> ลิมิตช่วยประมาณค่าอัตราการเปลี่ยนแปลงใกล้จุด</p>
+                        </div>
+        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('x^2')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูกราฟตัวอย่าง</button>
+                            <button onclick="trackLessonCompletion('limits')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">เรียนจบ</button>
+                            </div>
+                        `
+                },
+                'linear-system': {
+                title: 'ระบบสมการเชิงเส้น',
+                content: `
+                        <h1 class="text-3xl font-bold mb-6">ระบบสมการเชิงเส้น</h1>
+        
+                        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+                            <p class="mb-4">ระบบสมการเชิงเส้นคือชุดสมการที่ตัวแปรแต่ละตัวมีลำดับชั้นเป็นกำลังหนึ่ง และสามารถเขียนในรูปแบบเมทริกซ์ได้:</p>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4 text-center">
+                            <p>ตัวอย่าง: <br>$\\begin{cases} a_1x + b_1y = c_1 \\\\ a_2x + b_2y = c_2 \\end{cases}$</p>
+                        </div>
+        
+                        <h2 class="text-2xl font-semibold mb-4">วิธีแก้ระบบสมการเชิงเส้น</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p><strong>วิธีแทนค่า (Substitution):</strong> แก้ตัวแปรตัวหนึ่งแล้วแทนค่าไปในสมการอีกตัว</p>
+                            <p><strong>วิธีกำจัดตัวแปร (Elimination):</strong> บวกหรือลบสมการเพื่อลดจำนวนตัวแปร</p>
+                            <p><strong>วิธีเมทริกซ์ (Matrix):</strong> ใช้เมทริกซ์ร่วมกับการหาอินเวอร์สหรือการทำ Gauss-Jordan</p>
+                        </div>
+        
+                        <h2 class="text-2xl font-semibold mb-4">ตัวอย่างระบบสมการเชิงเส้น</h2>
+                        <div class="bg-green-50 p-4 rounded-lg mb-4">
+                            <p>$x + y = 5$</p>
+                            <p>$2x - y = 1$</p>
+                            <p>วิธีแก้: $(x, y) = (2, 3)$</p>
+                        </div>
+        
+                        <h2 class="text-2xl font-semibold mb-4">การประยุกต์</h2>
+                        <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+                            <p><strong>ฟิสิกส์:</strong> แก้แรงสมดุลหรือวงจรไฟฟ้า</p>
+                            <p><strong>เศรษฐศาสตร์:</strong> วิเคราะห์อุปสงค์-อุปทานหลายสินค้า</p>
+                            <p><strong>คอมพิวเตอร์:</strong> ใช้ในการทำกราฟิกและแก้ปัญหาการทำ optimization</p>
+                        </div>
+        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('x+y=5')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูตัวอย่างกราฟ</button>
+                            <button onclick="trackLessonCompletion('linear-system')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">เรียนจบ</button>
+                        </div>
+                        `
+                },
+                'circle': {
+                title: 'วงกลม',
+                content: `
+                        <h1 class="text-3xl font-bold mb-6">วงกลม</h1>
+        
+                        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+                        <p class="mb-4">วงกลมคือชุดของจุดทั้งหมดบนระนาบที่มีระยะทางเท่ากันจากจุดศูนย์กลางที่กำหนด:</p>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4 text-center">
+                        <p>สมการมาตรฐาน: <br>$ (x - h)^2 + (y - k)^2 = r^2 $</p>
+                        <p>โดยที่ $(h, k)$ คือจุดศูนย์กลาง และ $r$ คือรัศมี</p>
+                            </div>
+        
+                        <h2 class="text-2xl font-semibold mb-4">สมบัติพื้นฐาน</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p><strong>รัศมี (Radius):</strong> ระยะทางจากจุดศูนย์กลางถึงจุดบนวงกลม</p>
+                            <p><strong>เส้นผ่านศูนย์กลาง (Diameter):</strong> $d = 2r$</p>
+                            <p><strong>เส้นรอบวง (Circumference):</strong> $C = 2\\pi r$</p>
+                            <p><strong>พื้นที่ (Area):</strong> $A = \\pi r^2$</p>
+                        </div>
+        
+                        <h2 class="text-2xl font-semibold mb-4">ตัวอย่าง</h2>
+                        <div class="bg-green-50 p-4 rounded-lg mb-4">
+                            <p>วงกลมศูนย์กลาง $(0,0)$ รัศมี $3$: <br> $x^2 + y^2 = 9$</p>
+                            <p>วงกลมศูนย์กลาง $(2,-1)$ รัศมี $5$: <br> $(x-2)^2 + (y+1)^2 = 25$</p>
+                        </div>
+        
+                        <h2 class="text-2xl font-semibold mb-4">การประยุกต์</h2>
+                        <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+                            <p><strong>ฟิสิกส์:</strong> การเคลื่อนที่เป็นวงกลม เช่น วงโคจรดาว, แรงสู่ศูนย์กลาง</p>
+                            <p><strong>วิศวกรรม:</strong> การออกแบบล้อ, เกียร์ และวงแหวน</p>
+                            <p><strong>คณิตศาสตร์:</strong> การหาค่าตัดกับเส้นตรง, พื้นที่และความยาวโค้ง</p>
+                        </div>
+        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('(x-0)^2 + (y-0)^2 = 9')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูตัวอย่างกราฟ</button>
+                            <button onclick="trackLessonCompletion('circle')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">เรียนจบ</button>
+                        </div>
+                    `
+        },
+        'vectors': {
+    title: 'เวกเตอร์',
+    content: `
+        <h1 class="text-3xl font-bold mb-6">เวกเตอร์</h1>
+        
+        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+        <p class="mb-4">เวกเตอร์คือปริมาณที่มีทั้งขนาด (magnitude) และทิศทาง (direction) ต่างจากสเกลาร์ที่มีเพียงขนาด:</p>
+        <div class="bg-blue-50 p-4 rounded-lg mb-4 text-center">
+            <p>เวกเตอร์ในระนาบสองมิติ: <br>$\\vec{v} = \\langle v_x, v_y \\rangle$</p>
+            <p>เวกเตอร์ในสามมิติ: <br>$\\vec{v} = \\langle v_x, v_y, v_z \\rangle$</p>
+        </div>
+        
+        <h2 class="text-2xl font-semibold mb-4">สมบัติพื้นฐาน</h2>
+        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <p><strong>ความยาวของเวกเตอร์ (Magnitude):</strong> $|\\vec{v}| = \\sqrt{v_x^2 + v_y^2 + v_z^2}$</p>
+            <p><strong>การบวกเวกเตอร์:</strong> $\\vec{u} + \\vec{v} = \\langle u_x+v_x, u_y+v_y, u_z+v_z \\rangle$</p>
+            <p><strong>การลบเวกเตอร์:</strong> $\\vec{u} - \\vec{v} = \\langle u_x-v_x, u_y-v_y, u_z-v_z \\rangle$</p>
+            <p><strong>คูณสเกลาร์:</strong> $k\\vec{v} = \\langle kv_x, kv_y, kv_z \\rangle$</p>
+            <p><strong>ผลคูณจุด (Dot Product):</strong> $\\vec{u} \\cdot \\vec{v} = u_xv_x + u_yv_y + u_zv_z$</p>
+            <p><strong>ผลคูณเวกเตอร์ (Cross Product, 3D):</strong> $\\vec{u} \\times \\vec{v} = \\langle u_yv_z-u_zv_y, u_zv_x-u_xv_z, u_xv_y-u_yv_x \\rangle$</p>
+        </div>
+        
+        <h2 class="text-2xl font-semibold mb-4">ตัวอย่าง</h2>
+        <div class="bg-green-50 p-4 rounded-lg mb-4">
+            <p>เวกเตอร์สองมิติ: $\\vec{v} = \\langle 3, 4 \\rangle$, ความยาว $|\\vec{v}| = 5$</p>
+            <p>เวกเตอร์สามมิติ: $\\vec{u} = \\langle 1, 2, 2 \\rangle$, ความยาว $|\\vec{u}| = 3$</p>
+        </div>
+        
+        <h2 class="text-2xl font-semibold mb-4">การประยุกต์</h2>
+        <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+            <p><strong>ฟิสิกส์:</strong> แรง, ความเร็ว, การเคลื่อนที่ในสองและสามมิติ</p>
+            <p><strong>วิศวกรรม:</strong> การวิเคราะห์โครงสร้าง, การเคลื่อนที่ของเครื่องจักร</p>
+            <p><strong>คณิตศาสตร์และกราฟิก:</strong> การหมุน, การฉายภาพ, การเคลื่อนที่ของจุดในกราฟิก</p>
+        </div>
+        
+        <div class="mt-8">
+            <button onclick="showSection('graph-lab'); setEquation('v=<3,4>')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูตัวอย่างกราฟเวกเตอร์</button>
+            <button onclick="trackLessonCompletion('vectors')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">เรียนจบ</button>
+        </div>
+    `
+},
+'analytic-geometry': {
+    title: 'เรขาคณิตวิเคราะห์',
+    content: `
+        <h1 class="text-3xl font-bold mb-6">เรขาคณิตวิเคราะห์</h1>
+        
+        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+        <p class="mb-4">เรขาคณิตวิเคราะห์คือการใช้สมการทางคณิตศาสตร์เพื่อศึกษาและวิเคราะห์รูปทรงเรขาคณิตบนระนาบหรือในสามมิติ:</p>
+        <div class="bg-blue-50 p-4 rounded-lg mb-4 text-center">
+            <p>ตัวอย่างสมการพื้นฐาน:</p>
+            <p>เส้นตรง: $y = mx + b$</p>
+            <p>วงกลม: $(x - h)^2 + (y - k)^2 = r^2$</p>
+            <p>วงรี: $\\frac{(x-h)^2}{a^2} + \\frac{(y-k)^2}{b^2} = 1$</p>
+            <p>พาราโบลา: $y = ax^2 + bx + c$</p>
+        </div>
+        
+        <h2 class="text-2xl font-semibold mb-4">สมบัติพื้นฐาน</h2>
+        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <p><strong>ระยะทางระหว่างจุดสองจุด:</strong> $d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$</p>
+            <p><strong>จุดกึ่งกลางระหว่างสองจุด:</strong> $M = \\left(\\frac{x_1+x_2}{2}, \\frac{y_1+y_2}{2}\\right)$</p>
+            <p><strong>ความชันของเส้นตรง:</strong> $m = \\frac{y_2-y_1}{x_2-x_1}$</p>
+            <p><strong>ระยะจากจุดถึงเส้นตรง:</strong> $d = \\frac{|Ax_0 + By_0 + C|}{\\sqrt{A^2 + B^2}}$</p>
+        </div>
+        
+        <h2 class="text-2xl font-semibold mb-4">ตัวอย่าง</h2>
+        <div class="bg-green-50 p-4 rounded-lg mb-4">
+            <p>เส้นตรงผ่านจุด (1,2) ความชัน 3: $y - 2 = 3(x - 1)$</p>
+            <p>วงกลมศูนย์กลาง (0,0) รัศมี 5: $x^2 + y^2 = 25$</p>
+            <p>พาราโบลา: $y = 2x^2 - 4x + 1$</p>
+        </div>
+        
+        <h2 class="text-2xl font-semibold mb-4">การประยุกต์</h2>
+        <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+            <p><strong>ฟิสิกส์:</strong> วิเคราะห์การเคลื่อนที่ของวัตถุบนระนาบ</p>
+            <p><strong>วิศวกรรม:</strong> การออกแบบโครงสร้าง, การกำหนดพิกัด</p>
+            <p><strong>คณิตศาสตร์และกราฟิก:</strong> การวิเคราะห์รูปทรง, การหาจุดตัดและระยะทาง</p>
+        </div>
+        
+        <div class="mt-8">
+            <button onclick="showSection('graph-lab'); setEquation('y=mx+b')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูตัวอย่างกราฟ</button>
+            <button onclick="trackLessonCompletion('analytic-geometry')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">เรียนจบ</button>
+        </div>
+    `
+},
             };
             
             const lesson = lessons[lessonId];
