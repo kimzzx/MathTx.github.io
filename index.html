@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathTx - เรียนคณิตฯ เข้าใจง่าย ทำได้จริง</title>
+    <meta name="description" content="ตำราคณิตศาสตร์ออนไลน์สำหรับนักเรียน ม.4-ม.6 พร้อมระบบกราฟ interactive และแบบฝึกหัด">
+    <meta property="og:title" content="MathTx - เรียนคณิตฯ เข้าใจง่าย ทำได้จริง">
+    <meta property="og:description" content="ตำราคณิตศาสตร์ออนไลน์สำหรับนักเรียน ม.4-ม.6">
+    <meta property="og:type" content="website">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0B57A4',
+                        'primary-light': '#E6F4FF',
+                        'primary-dark': '#083D73'
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'serif': ['Noto Serif', 'serif']
+                    }
+                }
+            }
+        }
+        
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif:wght@400;500;600&display=swap');
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #0B57A4 0%, #E6F4FF 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0B57A4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .math-input {
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Slider Styles */
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .slider:hover {
+            opacity: 1;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #0B57A4;
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #0B57A4;
+            cursor: pointer;
+            border: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50" role="navigation" aria-label="หลัก">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-8 w-8 text-primary" viewBox="0 0 40 40" fill="currentColor" aria-hidden="true">
+                            <rect x="2" y="2" width="36" height="36" rx="8" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <path d="M12 20h16M20 12v16" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="15" cy="15" r="2" fill="currentColor"/>
+                            <circle cx="25" cy="25" r="2" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h1 class="text-xl font-bold text-primary">MathTx</h1>
+                    </div>
+                </div>
+                
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <button onclick="showSection('home')" class="nav-link text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors" aria-label="หน้าแรก">หน้าแรก</button>
+                        <button onclick="showSection('lessons')" class="nav-link text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors" aria-label="บทเรียน">บทเรียน</button>
+                        <button onclick="showSection('graph-lab')" class="nav-link text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors" aria-label="Graph Lab">Graph Lab</button>
+                        <button onclick="showSection('quiz')" class="nav-link text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors" aria-label="แบบฝึกหัด">แบบฝึกหัด</button>
+                        <button id="profile-nav" onclick="showSection('profile')" class="nav-link text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors hidden" aria-label="โปรไฟล์">โปรไฟล์</button>
+                        <button onclick="showSection('about')" class="nav-link text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors" aria-label="เกี่ยวกับเรา">เกี่ยวกับเรา</button>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div id="user-menu" class="hidden">
+                        <div class="flex items-center gap-2">
+                            <span id="user-name" class="text-sm text-gray-700"></span>
+                            <button onclick="logout()" class="text-sm text-gray-500 hover:text-primary">ออกจากระบบ</button>
+                        </div>
+                    </div>
+                    <div id="auth-buttons" class="flex items-center gap-2">
+                        <button onclick="showSection('login')" class="text-sm text-gray-700 hover:text-primary px-3 py-1 rounded">เข้าสู่ระบบ</button>
+                        <button onclick="showSection('register')" class="text-sm bg-primary text-white px-3 py-1 rounded hover:bg-primary-dark">สมัครสมาชิก</button>
+                    </div>
+                    <div class="md:hidden">
+                        <button id="mobile-menu-btn" class="text-gray-700 hover:text-primary p-2" aria-label="เมนู" aria-expanded="false">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <button onclick="showSection('home')" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md text-base font-medium w-full text-left">หน้าแรก</button>
+                <button onclick="showSection('lessons')" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md text-base font-medium w-full text-left">บทเรียน</button>
+                <button onclick="showSection('graph-lab')" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md text-base font-medium w-full text-left">Graph Lab</button>
+                <button onclick="showSection('quiz')" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md text-base font-medium w-full text-left">แบบฝึกหัด</button>
+                <button id="mobile-profile-nav" onclick="showSection('profile')" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md text-base font-medium w-full text-left hidden">โปรไฟล์</button>
+                <button onclick="showSection('about')" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md text-base font-medium w-full text-left">เกี่ยวกับเรา</button>
+                <div id="mobile-auth-buttons" class="border-t pt-2 mt-2">
+                    <button onclick="showSection('login')" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md text-base font-medium w-full text-left">เข้าสู่ระบบ</button>
+                    <button onclick="showSection('register')" class="block bg-primary text-white px-3 py-2 rounded-md text-base font-medium w-full text-left">สมัครสมาชิก</button>
+                </div>
+                <div id="mobile-user-menu" class="border-t pt-2 mt-2 hidden">
+                    <div class="px-3 py-2 text-sm text-gray-700" id="mobile-user-name"></div>
+                    <button onclick="logout()" class="block text-gray-500 hover:text-primary px-3 py-2 rounded-md text-base font-medium w-full text-left">ออกจากระบบ</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <!-- Hero Section -->
+            <div class="gradient-bg text-white py-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">เรียนคณิตฯ เข้าใจง่าย ทำได้จริง</h1>
+                    <p class="text-xl md:text-2xl mb-8 opacity-90">ตำราออนไลน์สำหรับนักเรียน ม.4–ม.6 พร้อมระบบกราฟ interactive</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="showSection('lessons')" class="bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">เริ่มเรียน</button>
+                        <button onclick="showSection('graph-lab')" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors">ทดลองกราฟ</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Search -->
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-2xl font-semibold mb-4 text-center">ค้นหาบทเรียนแบบด่วน</h2>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input type="text" id="quick-search" placeholder="ค้นหาหัวข้อ เช่น พาราโบลา, ตรีโกณ..." class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" aria-label="ค้นหาบทเรียน">
+                        <button onclick="performQuickSearch()" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors">ค้นหา</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Features -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <h2 class="text-3xl font-bold text-center mb-12">ฟีเจอร์เด่น</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-lg card-hover text-center">
+                        <div class="text-4xl mb-4">📚</div>
+                        <h3 class="text-xl font-semibold mb-3">บทเรียนครบถ้วน</h3>
+                        <p class="text-gray-600">เนื้อหาครอบคลุมทุกหัวข้อ ม.4-ม.6 พร้อมตัวอย่างและคำอธิบายที่เข้าใจง่าย</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg card-hover text-center">
+                        <div class="text-4xl mb-4">📊</div>
+                        <h3 class="text-xl font-semibold mb-3">กราฟ Interactive</h3>
+                        <p class="text-gray-600">วาดกราฟสมการทันที ซูมได้ ลากได้ ช่วยให้เข้าใจพฤติกรรมฟังก์ชัน</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg card-hover text-center">
+                        <div class="text-4xl mb-4">✏️</div>
+                        <h3 class="text-xl font-semibold mb-3">แบบฝึกหัด</h3>
+                        <p class="text-gray-600">แบบฝึกหัดหลากหลายรูปแบบ ให้คะแนนทันที พร้อมเฉลยละเอียด</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lessons Section -->
+        <section id="lessons" class="section hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <h1 class="text-3xl font-bold mb-8">บทเรียน</h1>
+                
+                <!-- Filter -->
+                <div class="mb-8">
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="filterLessons('all')" class="filter-btn active bg-primary text-white px-4 py-2 rounded-lg">ทั้งหมด</button>
+                        <button onclick="filterLessons('algebra')" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">พีชคณิต</button>
+                        <button onclick="filterLessons('trigonometry')" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">ตรีโกณมิติ</button>
+                        <button onclick="filterLessons('geometry')" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">เรขาคณิต</button>
+                        <button onclick="filterLessons('calculus')" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">แคลคูลัส</button>
+                    </div>
+                </div>
+                
+                <!-- Lessons Grid -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="lessons-grid">
+                    <!-- Algebra Lessons -->
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="algebra">
+                        <div class="text-2xl mb-3">🔢</div>
+                        <h3 class="text-xl font-semibold mb-2">ฟังก์ชันกำลังสอง</h3>
+                        <p class="text-gray-600 mb-4">เรียนรู้เกี่ยวกับพาราโบลา จุดยอด และการแยกตัวประกอบ</p>
+                        <button onclick="showLessonDetail('quadratic')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                    
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="algebra">
+                        <div class="text-2xl mb-3">📈</div>
+                        <h3 class="text-xl font-semibold mb-2">ฟังก์ชันเชิงเส้น</h3>
+                        <p class="text-gray-600 mb-4">ความชัน จุดตัดแกน และการหาสมการเส้นตรง</p>
+                        <button onclick="showLessonDetail('linear')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                    
+                    <!-- Trigonometry Lessons -->
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="trigonometry">
+                        <div class="text-2xl mb-3">📐</div>
+                        <h3 class="text-xl font-semibold mb-2">อัตราส่วนตรีโกณมิติ</h3>
+                        <p class="text-gray-600 mb-4">sin, cos, tan และการประยุกต์ใช้</p>
+                        <button onclick="showLessonDetail('trig-ratios')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                    
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="trigonometry">
+                        <div class="text-2xl mb-3">🌊</div>
+                        <h3 class="text-xl font-semibold mb-2">ฟังก์ชันตรีโกณมิติ</h3>
+                        <p class="text-gray-600 mb-4">กราฟ sin, cos และการแปลงรูป</p>
+                        <button onclick="showLessonDetail('trig-functions')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                    
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="algebra">
+                        <div class="text-2xl mb-3">🔄</div>
+                        <h3 class="text-xl font-semibold mb-2">ฟังก์ชันเลขชี้กำลัง</h3>
+                        <p class="text-gray-600 mb-4">e^x, การเติบโตแบบเลขชี้กำลัง และลอการิทึม</p>
+                        <button onclick="showLessonDetail('exponential')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                    
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="algebra">
+                        <div class="text-2xl mb-3">📊</div>
+                        <h3 class="text-xl font-semibold mb-2">ระบบสมการเชิงเส้น</h3>
+                        <p class="text-gray-600 mb-4">การแก้ระบบสมการ 2 ตัวแปร และการประยุกต์</p>
+                        <button onclick="showLessonDetail('linear-system')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                    
+                    <!-- Geometry Lessons -->
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="geometry">
+                        <div class="text-2xl mb-3">⭕</div>
+                        <h3 class="text-xl font-semibold mb-2">วงกลม</h3>
+                        <p class="text-gray-600 mb-4">สมการวงกลม เส้นสัมผัส และพื้นที่</p>
+                        <button onclick="showLessonDetail('circle')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                    
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="geometry">
+                        <div class="text-2xl mb-3">📐</div>
+                        <h3 class="text-xl font-semibold mb-2">เวกเตอร์</h3>
+                        <p class="text-gray-600 mb-4">การดำเนินการเวกเตอร์ ผลคูณจุด และผลคูณไขว้</p>
+                        <button onclick="showLessonDetail('vectors')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                    
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="geometry">
+                        <div class="text-2xl mb-3">🔺</div>
+                        <h3 class="text-xl font-semibold mb-2">เรขาคณิตวิเคราะห์</h3>
+                        <p class="text-gray-600 mb-4">ระยะทาง จุดกึ่งกลาง และสมการเส้นตรง</p>
+                        <button onclick="showLessonDetail('analytic-geometry')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                    
+                    <!-- Calculus Lessons -->
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="calculus">
+                        <div class="text-2xl mb-3">∫</div>
+                        <h3 class="text-xl font-semibold mb-2">ลิมิตเบื้องต้น</h3>
+                        <p class="text-gray-600 mb-4">แนวคิดลิมิตและการหาค่าลิมิต</p>
+                        <button onclick="showLessonDetail('limits')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                    
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="calculus">
+                        <div class="text-2xl mb-3">📈</div>
+                        <h3 class="text-xl font-semibold mb-2">อนุพันธ์</h3>
+                        <p class="text-gray-600 mb-4">การหาอนุพันธ์ ความชัน และการประยุกต์</p>
+                        <button onclick="showLessonDetail('derivatives')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                    
+                    <div class="lesson-card bg-white rounded-lg shadow-lg p-6 card-hover" data-category="calculus">
+                        <div class="text-2xl mb-3">∫</div>
+                        <h3 class="text-xl font-semibold mb-2">ปริพันธ์</h3>
+                        <p class="text-gray-600 mb-4">การหาปริพันธ์ พื้นที่ใต้กราฟ และการประยุกต์</p>
+                        <button onclick="showLessonDetail('integrals')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">เรียนเลย</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lesson Detail Section -->
+        <section id="lesson-detail" class="section hidden">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <button onclick="showSection('lessons')" class="mb-6 text-primary hover:text-primary-dark flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    กลับไปบทเรียน
+                </button>
+                
+                <div id="lesson-content" class="bg-white rounded-lg shadow-lg p-8 font-serif">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Graph Lab Section -->
+        <section id="graph-lab" class="section hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <h1 class="text-3xl font-bold mb-8">Graph Lab - ห้องปฏิบัติการกราฟ</h1>
+                
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Input Panel -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-lg shadow-lg p-6">
+                            <h2 class="text-xl font-semibold mb-4">ป้อนสมการ</h2>
+                            
+                            <div class="mb-4">
+                                <label for="equation-input" class="block text-sm font-medium text-gray-700 mb-2">สมการ (y = ...)</label>
+                                <input type="text" id="equation-input" class="math-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="x^2 - 4*x + 3" aria-describedby="equation-help">
+                                <p id="equation-help" class="text-sm text-gray-500 mt-1">ตัวอย่าง: x^2, sin(x), 2*x + 1</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="x-min" class="block text-sm font-medium text-gray-700 mb-1">x ต่ำสุด</label>
+                                    <input type="number" id="x-min" value="-10" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" onchange="updateGraphRange()">
+                                </div>
+                                <div>
+                                    <label for="x-max" class="block text-sm font-medium text-gray-700 mb-1">x สูงสุด</label>
+                                    <input type="number" id="x-max" value="10" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" onchange="updateGraphRange()">
+                                </div>
+                            </div>
+                            
+                            <button onclick="plotGraph()" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors mb-4">
+                                <span id="plot-btn-text">วาดกราฟ</span>
+                                <span id="plot-loading" class="loading hidden ml-2"></span>
+                            </button>
+                            
+                            <!-- Interactive Controls -->
+                            <div id="graph-controls" class="border-t pt-4 mb-4 hidden">
+                                <h3 class="font-semibold mb-3">ปรับแต่งกราฟ</h3>
+                                
+                                <!-- Zoom Controls -->
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">ซูม: <span id="zoom-value">1.0x</span></label>
+                                    <input type="range" id="zoom-slider" min="0.1" max="5" step="0.1" value="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                                </div>
+                                
+                                <!-- Pan Controls -->
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">เลื่อนแนวนอน: <span id="pan-x-value">0</span></label>
+                                    <input type="range" id="pan-x-slider" min="-20" max="20" step="0.5" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">เลื่อนแนวตั้ง: <span id="pan-y-value">0</span></label>
+                                    <input type="range" id="pan-y-slider" min="-20" max="20" step="0.5" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                                </div>
+                                
+                                <!-- Function Parameters (for parametric functions) -->
+                                <div id="param-controls" class="hidden">
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">พารามิเตอร์ A: <span id="param-a-value">1</span></label>
+                                        <input type="range" id="param-a-slider" min="-5" max="5" step="0.1" value="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">พารามิเตอร์ B: <span id="param-b-value">1</span></label>
+                                        <input type="range" id="param-b-slider" min="-5" max="5" step="0.1" value="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                                    </div>
+                                </div>
+                                
+                                <button onclick="resetControls()" class="w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm">รีเซ็ตการควบคุม</button>
+                            </div>
+                            
+                            <div class="border-t pt-4">
+                                <h3 class="font-semibold mb-2">ตัวอย่างสมการ</h3>
+                                <div class="space-y-2">
+                                    <button onclick="setEquation('x^2 - 4*x + 3')" class="block w-full text-left text-sm text-primary hover:bg-primary-light px-2 py-1 rounded">x² - 4x + 3 (พาราโบลา)</button>
+                                    <button onclick="setEquation('sin(x)')" class="block w-full text-left text-sm text-primary hover:bg-primary-light px-2 py-1 rounded">sin(x) (คลื่นไซน์)</button>
+                                    <button onclick="setEquation('cos(x)')" class="block w-full text-left text-sm text-primary hover:bg-primary-light px-2 py-1 rounded">cos(x) (คลื่นโคไซน์)</button>
+                                    <button onclick="setEquation('2*x + 1')" class="block w-full text-left text-sm text-primary hover:bg-primary-light px-2 py-1 rounded">2x + 1 (เส้นตรง)</button>
+                                    <button onclick="setEquation('x^3 - 3*x')" class="block w-full text-left text-sm text-primary hover:bg-primary-light px-2 py-1 rounded">x³ - 3x (กำลังสาม)</button>
+                                    <button onclick="setEquation('Math.exp(x)')" class="block w-full text-left text-sm text-primary hover:bg-primary-light px-2 py-1 rounded">e^x (เลขชี้กำลัง)</button>
+                                    <button onclick="setEquation('Math.log(x)')" class="block w-full text-left text-sm text-primary hover:bg-primary-light px-2 py-1 rounded">ln(x) (ลอการิทึม)</button>
+                                    <button onclick="setEquation('Math.abs(x)')" class="block w-full text-left text-sm text-primary hover:bg-primary-light px-2 py-1 rounded">|x| (ค่าสัมบูรณ์)</button>
+                                    <button onclick="setEquation('Math.sqrt(x)')" class="block w-full text-left text-sm text-primary hover:bg-primary-light px-2 py-1 rounded">√x (รากที่สอง)</button>
+                                    <button onclick="setEquation('1/x')" class="block w-full text-left text-sm text-primary hover:bg-primary-light px-2 py-1 rounded">1/x (ไฮเปอร์โบลา)</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Graph Panel -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-lg shadow-lg p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-semibold">กราฟ</h2>
+                                <div class="flex gap-2">
+                                    <button onclick="resetZoom()" class="text-sm bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300">รีเซ็ตซูม</button>
+                                    <button onclick="downloadGraph()" class="text-sm bg-primary text-white px-3 py-1 rounded hover:bg-primary-dark">ดาวน์โหลด PNG</button>
+                                </div>
+                            </div>
+                            
+                            <div id="graph-container" class="w-full h-96 border border-gray-200 rounded-lg flex items-center justify-center text-gray-500" style="min-height: 400px;">
+                                <div class="text-center">
+                                    <div class="text-4xl mb-2">📊</div>
+                                    <p>ป้อนสมการแล้วกดวาดกราฟ</p>
+                                </div>
+                            </div>
+                            
+                            <div id="graph-info" class="mt-4 p-4 bg-gray-50 rounded-lg hidden">
+                                <h3 class="font-semibold mb-2">ข้อมูลกราฟ</h3>
+                                <div id="graph-details"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quiz" class="section hidden">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <h1 class="text-3xl font-bold mb-8">แบบฝึกหัด</h1>
+                
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div id="quiz-selection" class="quiz-state">
+                        <h2 class="text-2xl font-semibold mb-6">เลือกหัวข้อแบบฝึกหัด</h2>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <button onclick="startQuiz('quadratic')" class="p-6 border-2 border-gray-200 rounded-lg hover:border-primary hover:bg-primary-light transition-colors text-left">
+                                <h3 class="font-semibold text-lg mb-2">ฟังก์ชันกำลังสอง</h3>
+                                <p class="text-gray-600">10 ข้อ | 15 นาที</p>
+                            </button>
+                            <button onclick="startQuiz('linear')" class="p-6 border-2 border-gray-200 rounded-lg hover:border-primary hover:bg-primary-light transition-colors text-left">
+                                <h3 class="font-semibold text-lg mb-2">ฟังก์ชันเชิงเส้น</h3>
+                                <p class="text-gray-600">8 ข้อ | 12 นาที</p>
+                            </button>
+                            <button onclick="startQuiz('trigonometry')" class="p-6 border-2 border-gray-200 rounded-lg hover:border-primary hover:bg-primary-light transition-colors text-left">
+                                <h3 class="font-semibold text-lg mb-2">ตรีโกณมิติ</h3>
+                                <p class="text-gray-600">12 ข้อ | 20 นาที</p>
+                            </button>
+                            <button onclick="startQuiz('mixed')" class="p-6 border-2 border-gray-200 rounded-lg hover:border-primary hover:bg-primary-light transition-colors text-left">
+                                <h3 class="font-semibold text-lg mb-2">รวมทุกหัวข้อ</h3>
+                                <p class="text-gray-600">15 ข้อ | 25 นาที</p>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="quiz-active" class="quiz-state hidden">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 id="quiz-title" class="text-2xl font-semibold"></h2>
+                            <div class="flex items-center gap-4">
+                                <span id="quiz-progress" class="text-sm text-gray-600"></span>
+                                <div id="quiz-timer" class="text-lg font-mono bg-gray-100 px-3 py-1 rounded"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="question-container" class="mb-6">
+                            <!-- Questions will be loaded here -->
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <button id="prev-btn" onclick="previousQuestion()" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>ก่อนหน้า</button>
+                            <button id="next-btn" onclick="nextQuestion()" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark">ถัดไป</button>
+                        </div>
+                    </div>
+                    
+                    <div id="quiz-results" class="quiz-state hidden">
+                        <div class="text-center">
+                            <div class="text-6xl mb-4">🎉</div>
+                            <h2 class="text-2xl font-semibold mb-4">เสร็จสิ้น!</h2>
+                            <div id="score-display" class="text-4xl font-bold text-primary mb-4"></div>
+                            <div id="score-details" class="text-gray-600 mb-6"></div>
+                            <button onclick="resetQuiz()" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark">ทำแบบฝึกหัดใหม่</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Section -->
+        <section id="login" class="section hidden">
+            <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h1 class="text-2xl font-bold text-center mb-6">เข้าสู่ระบบ</h1>
+                    
+                    <form id="login-form" class="space-y-4">
+                        <div>
+                            <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">อีเมล *</label>
+                            <input type="email" id="login-email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" aria-required="true">
+                        </div>
+                        <div>
+                            <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">รหัสผ่าน *</label>
+                            <input type="password" id="login-password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" aria-required="true">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="remember-me" class="mr-2">
+                                <span class="text-sm text-gray-600">จดจำการเข้าสู่ระบบ</span>
+                            </label>
+                            <button type="button" class="text-sm text-primary hover:text-primary-dark">ลืมรหัสผ่าน?</button>
+                        </div>
+                        <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors">เข้าสู่ระบบ</button>
+                    </form>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-600">ยังไม่มีบัญชี? <button onclick="showSection('register')" class="text-primary hover:text-primary-dark">สมัครสมาชิก</button></p>
+                    </div>
+                    
+                    <div id="login-error" class="hidden mt-4 p-4 bg-red-100 text-red-700 rounded-lg text-sm"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Register Section -->
+        <section id="register" class="section hidden">
+            <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h1 class="text-2xl font-bold text-center mb-6">สมัครสมาชิก</h1>
+                    
+                    <form id="register-form" class="space-y-4">
+                        <div>
+                            <label for="register-name" class="block text-sm font-medium text-gray-700 mb-1">ชื่อ-นามสกุล *</label>
+                            <input type="text" id="register-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" aria-required="true">
+                        </div>
+                        <div>
+                            <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">อีเมล *</label>
+                            <input type="email" id="register-email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" aria-required="true">
+                        </div>
+                        <div>
+                            <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">รหัสผ่าน *</label>
+                            <input type="password" id="register-password" required minlength="6" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" aria-required="true">
+                            <p class="text-xs text-gray-500 mt-1">รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร</p>
+                        </div>
+                        <div>
+                            <label for="register-confirm-password" class="block text-sm font-medium text-gray-700 mb-1">ยืนยันรหัสผ่าน *</label>
+                            <input type="password" id="register-confirm-password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" aria-required="true">
+                        </div>
+                        <div>
+                            <label for="register-grade" class="block text-sm font-medium text-gray-700 mb-1">ระดับชั้น</label>
+                            <select id="register-grade" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">เลือกระดับชั้น</option>
+                                <option value="m4">ม.4</option>
+                                <option value="m5">ม.5</option>
+                                <option value="m6">ม.6</option>
+                                <option value="other">อื่นๆ</option>
+                            </select>
+                        </div>
+                        <div class="flex items-start">
+                            <input type="checkbox" id="accept-terms" required class="mt-1 mr-2" aria-required="true">
+                            <label for="accept-terms" class="text-sm text-gray-600">
+                                ฉันยอมรับ <button type="button" class="text-primary hover:text-primary-dark">เงื่อนไขการใช้งาน</button> และ <button type="button" class="text-primary hover:text-primary-dark">นโยบายความเป็นส่วนตัว</button>
+                            </label>
+                        </div>
+                        <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors">สมัครสมาชิก</button>
+                    </form>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-600">มีบัญชีแล้ว? <button onclick="showSection('login')" class="text-primary hover:text-primary-dark">เข้าสู่ระบบ</button></p>
+                    </div>
+                    
+                    <div id="register-error" class="hidden mt-4 p-4 bg-red-100 text-red-700 rounded-lg text-sm"></div>
+                    <div id="register-success" class="hidden mt-4 p-4 bg-green-100 text-green-700 rounded-lg text-sm"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile" class="section hidden">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <h1 class="text-3xl font-bold mb-8">โปรไฟล์ของฉัน</h1>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Profile Info -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h2 class="text-xl font-semibold mb-4">ข้อมูลส่วนตัว</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ-นามสกุล</label>
+                                <p id="profile-name" class="text-gray-900"></p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">อีเมล</label>
+                                <p id="profile-email" class="text-gray-900"></p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ระดับชั้น</label>
+                                <p id="profile-grade" class="text-gray-900"></p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">สมัครสมาชิกเมื่อ</label>
+                                <p id="profile-joined" class="text-gray-900"></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Stats -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h2 class="text-xl font-semibold mb-4">ความคืบหน้า</h2>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">บทเรียนที่เรียนแล้ว</span>
+                                <span id="lessons-completed" class="font-semibold text-primary">0/6</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div id="lessons-progress" class="bg-primary h-2 rounded-full" style="width: 0%"></div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">แบบฝึกหัดที่ทำแล้ว</span>
+                                <span id="quizzes-completed" class="font-semibold text-green-600">0</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">คะแนนเฉลี่ย</span>
+                                <span id="average-score" class="font-semibold text-blue-600">-</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">กราฟที่วาดแล้ว</span>
+                                <span id="graphs-created" class="font-semibold text-purple-600">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-lg shadow-lg p-6 mt-8">
+                    <h2 class="text-xl font-semibold mb-4">กิจกรรมล่าสุด</h2>
+                    <div id="recent-activity" class="space-y-3">
+                        <p class="text-gray-500 text-center py-8">ยังไม่มีกิจกรรม</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section hidden">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <h1 class="text-3xl font-bold mb-8">เกี่ยวกับเรา</h1>
+                
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h2 class="text-2xl font-semibold mb-4">ภารกิจของเรา</h2>
+                    <p class="text-gray-700 mb-4 leading-relaxed">
+                        TextBookMath ถูกสร้างขึ้นเพื่อช่วยให้นักเรียนระดับมัธยมศึกษาตอนปลายเรียนรู้คณิตศาสตร์ได้อย่างเข้าใจและสนุกสนาน 
+                        เราเชื่อว่าคณิตศาสตร์ไม่ใช่เรื่องยาก หากมีการอธิบายที่ดีและเครื่องมือที่เหมาะสม
+                    </p>
+                    <p class="text-gray-700 leading-relaxed">
+                        ด้วยระบบกราฟ interactive และแบบฝึกหัดที่หลากหลาย เราหวังว่านักเรียนจะสามารถมองเห็นความงามของคณิตศาสตร์
+                        และนำไปประยุกต์ใช้ในชีวิตประจำวันได้
+                    </p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h2 class="text-2xl font-semibold mb-4">ทีมพัฒนา</h2>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-primary-light rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="text-2xl">👨‍🏫</span>
+                            </div>
+                            <h3 class="font-semibold">ทีมครูผู้เชี่ยวชาญ</h3>
+                            <p class="text-gray-600 text-sm">ครูคณิตศาสตร์ประสบการณ์สูง</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-primary-light rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="text-2xl">👩‍💻</span>
+                            </div>
+                            <h3 class="font-semibold">ทีมพัฒนาเทคโนโลยี</h3>
+                            <p class="text-gray-600 text-sm">นักพัฒนาเว็บและ UX Designer</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h2 class="text-2xl font-semibold mb-4">ติดต่อเรา</h2>
+                    <form id="contact-form" class="space-y-4">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-1">ชื่อ *</label>
+                                <input type="text" id="contact-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" aria-required="true">
+                            </div>
+                            <div>
+                                <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">อีเมล *</label>
+                                <input type="email" id="contact-email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" aria-required="true">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="contact-message" class="block text-sm font-medium text-gray-700 mb-1">ข้อความ *</label>
+                            <textarea id="contact-message" rows="4" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" aria-required="true"></textarea>
+                        </div>
+                        <button type="submit" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors">ส่งข้อความ</button>
+                    </form>
+                    
+                    <div id="contact-success" class="hidden mt-4 p-4 bg-green-100 text-green-700 rounded-lg">
+                        ขอบคุณที่ติดต่อเรา! เราจะตอบกลับโดยเร็วที่สุด
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">MathTx</h3>
+                    <p class="text-gray-300">เรียนคณิตฯ เข้าใจง่าย ทำได้จริง</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">บทเรียน</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-white">พีชคณิต</a></li>
+                        <li><a href="#" class="hover:text-white">ตรีโกณมิติ</a></li>
+                        <li><a href="#" class="hover:text-white">เรขาคณิต</a></li>
+                        <li><a href="#" class="hover:text-white">แคลคูลัส</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">เครื่องมือ</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-white">Graph Lab</a></li>
+                        <li><a href="#" class="hover:text-white">แบบฝึกหัด</a></li>
+                        <li><a href="#" class="hover:text-white">เฉลยข้อสอบ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">ช่วยเหลือ</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white">ติดต่อเรา</a></li>
+                        <li><a href="#" class="hover:text-white">นโยบายความเป็นส่วนตัว</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
+                <p>&copy; 2024 MathTx. สงวนลิขสิทธิ์.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        let currentSection = 'home';
+        let currentQuiz = null;
+        let currentQuestionIndex = 0;
+        let quizTimer = null;
+        let userAnswers = [];
+        let currentUser = null;
+        let userProgress = {
+            lessonsCompleted: [],
+            quizzesCompleted: [],
+            graphsCreated: 0,
+            totalScore: 0,
+            quizCount: 0
+        };
+        
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('active');
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                targetSection.classList.add('active');
+                currentSection = sectionId;
+                
+                // Update progress display if showing profile
+                if (sectionId === 'profile' && currentUser) {
+                    updateProgressDisplay();
+                    updateRecentActivity();
+                }
+            }
+            
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-primary', 'font-semibold');
+                link.classList.add('text-gray-700');
+            });
+            
+            // Close mobile menu
+            document.getElementById('mobile-menu').classList.add('hidden');
+            document.getElementById('mobile-menu-btn').setAttribute('aria-expanded', 'false');
+        }
+        
+        function updateRecentActivity() {
+            const activityContainer = document.getElementById('recent-activity');
+            if (currentUser && currentUser.recentActivity && currentUser.recentActivity.length > 0) {
+                activityContainer.innerHTML = currentUser.recentActivity.map(activity => `
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                        <span class="text-gray-700">${activity.text}</span>
+                        <span class="text-sm text-gray-500">${new Date(activity.date).toLocaleDateString('th-TH')}</span>
+                    </div>
+                `).join('');
+            } else {
+                activityContainer.innerHTML = '<p class="text-gray-500 text-center py-8">ยังไม่มีกิจกรรม</p>';
+            }
+        }
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            const isHidden = menu.classList.contains('hidden');
+            
+            if (isHidden) {
+                menu.classList.remove('hidden');
+                this.setAttribute('aria-expanded', 'true');
+            } else {
+                menu.classList.add('hidden');
+                this.setAttribute('aria-expanded', 'false');
+            }
+        });
+        
+        // Quick search
+        function performQuickSearch() {
+            const query = document.getElementById('quick-search').value.toLowerCase();
+            if (!query) return;
+            
+            showSection('lessons');
+            
+            // Filter lessons based on search
+            const lessons = document.querySelectorAll('.lesson-card');
+            lessons.forEach(lesson => {
+                const title = lesson.querySelector('h3').textContent.toLowerCase();
+                const description = lesson.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(query) || description.includes(query)) {
+                    lesson.style.display = 'block';
+                } else {
+                    lesson.style.display = 'none';
+                }
+            });
+        }
+        
+        // Enter key for search
+        document.getElementById('quick-search').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performQuickSearch();
+            }
+        });
+        
+        // Enter key for graph plotting
+        document.addEventListener('DOMContentLoaded', function() {
+            const equationInput = document.getElementById('equation-input');
+            if (equationInput) {
+                equationInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        plotGraph();
+                    }
+                });
+            }
+        });
+        
+        // Lesson filtering
+        function filterLessons(category) {
+            const lessons = document.querySelectorAll('.lesson-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // Update button states
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+            event.target.classList.add('bg-primary', 'text-white');
+            
+            // Filter lessons
+            lessons.forEach(lesson => {
+                if (category === 'all' || lesson.dataset.category === category) {
+                    lesson.style.display = 'block';
+                } else {
+                    lesson.style.display = 'none';
+                }
+            });
+        }
+        
+        // Lesson details
+        function showLessonDetail(lessonId) {
+            const lessons = {
+                'quadratic': {
+                    title: 'ฟังก์ชันกำลังสอง',
+                    content: `
+                        <h1 class="text-3xl font-bold mb-6">ฟังก์ชันกำลังสอง</h1>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+                        <p class="mb-4">ฟังก์ชันกำลังสอง คือ ฟังก์ชันที่มีรูปแบบ $f(x) = ax^2 + bx + c$ เมื่อ $a \\neq 0$</p>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">สูตรสำคัญ</h2>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                            <p><strong>จุดยอด:</strong> $x = -\\frac{b}{2a}$</p>
+                            <p><strong>แยกตัวประกอบ:</strong> $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$</p>
+                            <p><strong>ดิสคริมิแนนต์:</strong> $\\Delta = b^2 - 4ac$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">ตัวอย่าง</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p><strong>โจทย์:</strong> หาจุดยอดของ $f(x) = x^2 - 4x + 3$</p>
+                            <p><strong>วิธีทำ:</strong></p>
+                            <p>$a = 1, b = -4, c = 3$</p>
+                            <p>$x = -\\frac{(-4)}{2(1)} = \\frac{4}{2} = 2$</p>
+                            <p>$f(2) = 2^2 - 4(2) + 3 = 4 - 8 + 3 = -1$</p>
+                            <p><strong>ตอบ:</strong> จุดยอดอยู่ที่ $(2, -1)$</p>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('x^2 - 4*x + 3')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูกราฟตัวอย่าง</button>
+                            <button onclick="startQuiz('quadratic'); trackLessonCompletion('quadratic')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">ทำแบบฝึกหัด</button>
+                        </div>
+                    `
+                },
+                'linear': {
+                    title: 'ฟังก์ชันเชิงเส้น',
+                    content: `
+                        <h1 class="text-3xl font-bold mb-6">ฟังก์ชันเชิงเส้น</h1>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+                        <p class="mb-4">ฟังก์ชันเชิงเส้น คือ ฟังก์ชันที่มีรูปแบบ $f(x) = mx + b$ เมื่อ $m$ คือความชัน และ $b$ คือจุดตัดแกน y</p>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">สูตรสำคัญ</h2>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                            <p><strong>ความชัน:</strong> $m = \\frac{y_2 - y_1}{x_2 - x_1}$</p>
+                            <p><strong>สมการเส้นตรง:</strong> $y - y_1 = m(x - x_1)$</p>
+                            <p><strong>จุดตัดแกน x:</strong> เมื่อ $y = 0$</p>
+                            <p><strong>จุดตัดแกน y:</strong> เมื่อ $x = 0$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">ตัวอย่าง</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p><strong>โจทย์:</strong> หาสมการเส้นตรงที่ผ่านจุด $(1, 3)$ และ $(3, 7)$</p>
+                            <p><strong>วิธีทำ:</strong></p>
+                            <p>$m = \\frac{7-3}{3-1} = \\frac{4}{2} = 2$</p>
+                            <p>$y - 3 = 2(x - 1)$</p>
+                            <p>$y - 3 = 2x - 2$</p>
+                            <p>$y = 2x + 1$</p>
+                            <p><strong>ตอบ:</strong> $y = 2x + 1$</p>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('2*x + 1')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูกราฟตัวอย่าง</button>
+                            <button onclick="startQuiz('linear'); trackLessonCompletion('linear')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">ทำแบบฝึกหัด</button>
+                        </div>
+                    `
+                },
+                'trig-ratios': {
+                    title: 'อัตราส่วนตรีโกณมิติ',
+                    content: `
+                        <h1 class="text-3xl font-bold mb-6">อัตราส่วนตรีโกณมิติ</h1>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+                        <p class="mb-4">ในสามเหลี่ยมมุมฉาก อัตราส่วนตรีโกณมิติ คือ อัตราส่วนระหว่างด้านต่างๆ ของสามเหลี่ยม</p>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">สูตรพื้นฐาน</h2>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                            <p><strong>ไซน์:</strong> $\\sin \\theta = \\frac{\\text{ด้านตรงข้าม}}{\\text{ด้านตรงข้ามมุมฉาก}}$</p>
+                            <p><strong>โคไซน์:</strong> $\\cos \\theta = \\frac{\\text{ด้านประชิด}}{\\text{ด้านตรงข้ามมุมฉาก}}$</p>
+                            <p><strong>แทนเจนต์:</strong> $\\tan \\theta = \\frac{\\text{ด้านตรงข้าม}}{\\text{ด้านประชิด}} = \\frac{\\sin \\theta}{\\cos \\theta}$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">มุมพิเศษ</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <table class="w-full border-collapse border border-gray-300">
+                                <tr class="bg-gray-200">
+                                    <th class="border border-gray-300 p-2">มุม</th>
+                                    <th class="border border-gray-300 p-2">sin</th>
+                                    <th class="border border-gray-300 p-2">cos</th>
+                                    <th class="border border-gray-300 p-2">tan</th>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-2">30°</td>
+                                    <td class="border border-gray-300 p-2">1/2</td>
+                                    <td class="border border-gray-300 p-2">√3/2</td>
+                                    <td class="border border-gray-300 p-2">1/√3</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-2">45°</td>
+                                    <td class="border border-gray-300 p-2">√2/2</td>
+                                    <td class="border border-gray-300 p-2">√2/2</td>
+                                    <td class="border border-gray-300 p-2">1</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-2">60°</td>
+                                    <td class="border border-gray-300 p-2">√3/2</td>
+                                    <td class="border border-gray-300 p-2">1/2</td>
+                                    <td class="border border-gray-300 p-2">√3</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('sin(x)')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูกราฟ sin(x)</button>
+                            <button onclick="startQuiz('trigonometry'); trackLessonCompletion('trig-ratios')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">ทำแบบฝึกหัด</button>
+                        </div>
+                    `
+                },
+                'trig-functions': {
+                    title: 'ฟังก์ชันตรีโกณมิติ',
+                    content: `
+                        <h1 class="text-3xl font-bold mb-6">ฟังก์ชันตรีโกณมิติ</h1>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">กราฟฟังก์ชันตรีโกณมิติ</h2>
+                        <p class="mb-4">ฟังก์ชัน sin, cos, และ tan มีลักษณะเป็นคาบ (periodic) และมีรูปแบบคลื่น</p>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">คุณสมบัติสำคัญ</h2>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                            <p><strong>ฟังก์ชัน sin:</strong></p>
+                            <p>• โดเมน: $(-\\infty, \\infty)$</p>
+                            <p>• เรนจ์: $[-1, 1]$</p>
+                            <p>• คาบ: $2\\pi$</p>
+                            <p>• จุดตัดแกน x: $x = n\\pi$ เมื่อ $n$ เป็นจำนวนเต็ม</p>
+                        </div>
+                        
+                        <div class="bg-green-50 p-4 rounded-lg mb-4">
+                            <p><strong>ฟังก์ชัน cos:</strong></p>
+                            <p>• โดเมน: $(-\\infty, \\infty)$</p>
+                            <p>• เรนจ์: $[-1, 1]$</p>
+                            <p>• คาบ: $2\\pi$</p>
+                            <p>• จุดตัดแกน x: $x = \\frac{\\pi}{2} + n\\pi$ เมื่อ $n$ เป็นจำนวนเต็ม</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">การแปลงรูป</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p><strong>รูปแบบทั่วไป:</strong> $y = A\\sin(Bx + C) + D$</p>
+                            <p>• $A$ = แอมพลิจูด (ความสูงของคลื่น)</p>
+                            <p>• $B$ = ความถี่ (คาบ = $\\frac{2\\pi}{B}$)</p>
+                            <p>• $C$ = การเลื่อนแนวนอน (เฟส)</p>
+                            <p>• $D$ = การเลื่อนแนวตั้ง</p>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('sin(x)')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูกราฟ sin(x)</button>
+                            <button onclick="showSection('graph-lab'); setEquation('cos(x)')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 mr-4">ดูกราฟ cos(x)</button>
+                            <button onclick="startQuiz('trigonometry'); trackLessonCompletion('trig-functions')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">ทำแบบฝึกหัด</button>
+                        </div>
+                    `
+                },
+                'exponential': {
+                    title: 'ฟังก์ชันเลขชี้กำลัง',
+                    content: `
+                        <h1 class="text-3xl font-bold mb-6">ฟังก์ชันเลขชี้กำลัง</h1>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+                        <p class="mb-4">ฟังก์ชันเลขชี้กำลัง คือ ฟังก์ชันที่มีรูปแบบ $f(x) = a^x$ เมื่อ $a > 0$ และ $a \\neq 1$</p>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">ฟังก์ชันเลขชี้กำลังธรรมชาติ</h2>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                            <p><strong>ฟังก์ชัน:</strong> $f(x) = e^x$ เมื่อ $e \\approx 2.71828$</p>
+                            <p><strong>คุณสมบัติ:</strong></p>
+                            <p>• โดเมน: $(-\\infty, \\infty)$</p>
+                            <p>• เรนจ์: $(0, \\infty)$</p>
+                            <p>• ผ่านจุด $(0, 1)$</p>
+                            <p>• เป็นฟังก์ชันเพิ่ม (increasing)</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">กฎของเลขชี้กำลัง</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p>$a^m \\cdot a^n = a^{m+n}$</p>
+                            <p>$\\frac{a^m}{a^n} = a^{m-n}$</p>
+                            <p>$(a^m)^n = a^{mn}$</p>
+                            <p>$a^0 = 1$ (เมื่อ $a \\neq 0$)</p>
+                            <p>$a^{-n} = \\frac{1}{a^n}$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">ลอการิทึม</h2>
+                        <div class="bg-green-50 p-4 rounded-lg mb-4">
+                            <p><strong>นิยาม:</strong> $\\log_a x = y$ ก็ต่อเมื่อ $a^y = x$</p>
+                            <p><strong>ลอการิทึมธรรมชาติ:</strong> $\\ln x = \\log_e x$</p>
+                            <p><strong>ลอการิทึมสามัญ:</strong> $\\log x = \\log_{10} x$</p>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('exp(x)')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูกราฟ e^x</button>
+                            <button onclick="showSection('graph-lab'); setEquation('ln(x)')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 mr-4">ดูกราฟ ln(x)</button>
+                            <button onclick="trackLessonCompletion('exponential')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">เรียนจบ</button>
+                        </div>
+                    `
+                },
+                'derivatives': {
+                    title: 'อนุพันธ์',
+                    content: `
+                        <h1 class="text-3xl font-bold mb-6">อนุพันธ์</h1>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">นิยาม</h2>
+                        <p class="mb-4">อนุพันธ์ของฟังก์ชัน $f(x)$ คือ ลิมิต:</p>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4 text-center">
+                            <p>$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">กฎการหาอนุพันธ์</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p><strong>กฎกำลัง:</strong> $\\frac{d}{dx}[x^n] = nx^{n-1}$</p>
+                            <p><strong>กฎผลรวม:</strong> $\\frac{d}{dx}[f(x) + g(x)] = f'(x) + g'(x)$</p>
+                            <p><strong>กฎผลคูณ:</strong> $\\frac{d}{dx}[f(x)g(x)] = f'(x)g(x) + f(x)g'(x)$</p>
+                            <p><strong>กฎผลหาร:</strong> $\\frac{d}{dx}\\left[\\frac{f(x)}{g(x)}\\right] = \\frac{f'(x)g(x) - f(x)g'(x)}{[g(x)]^2}$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">อนุพันธ์ของฟังก์ชันพื้นฐาน</h2>
+                        <div class="bg-green-50 p-4 rounded-lg mb-4">
+                            <p>$\\frac{d}{dx}[\\sin x] = \\cos x$</p>
+                            <p>$\\frac{d}{dx}[\\cos x] = -\\sin x$</p>
+                            <p>$\\frac{d}{dx}[e^x] = e^x$</p>
+                            <p>$\\frac{d}{dx}[\\ln x] = \\frac{1}{x}$</p>
+                        </div>
+                        
+                        <h2 class="text-2xl font-semibold mb-4">การประยุกต์</h2>
+                        <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+                            <p><strong>ความชันของเส้นสัมผัส:</strong> ความชันที่จุด $(a, f(a))$ คือ $f'(a)$</p>
+                            <p><strong>อัตราการเปลี่ยนแปลง:</strong> อนุพันธ์แสดงอัตราการเปลี่ยนแปลงทันที</p>
+                            <p><strong>การหาค่าสูงสุดและต่ำสุด:</strong> ใช้ $f'(x) = 0$</p>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <button onclick="showSection('graph-lab'); setEquation('x^2')" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark mr-4">ดูกราฟตัวอย่าง</button>
+                            <button onclick="trackLessonCompletion('derivatives')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">เรียนจบ</button>
+                        </div>
+                    `
+                }
+            };
+            
+            const lesson = lessons[lessonId];
+            if (lesson) {
+                document.getElementById('lesson-content').innerHTML = lesson.content;
+                showSection('lesson-detail');
+                
+                // Re-render MathJax
+                if (window.MathJax) {
+                    MathJax.typesetPromise();
+                }
+            }
+        }
+        
+        // Graph Lab functions
+        let currentGraphData = null;
+        let baseXRange = [-10, 10];
+        let baseYRange = null;
+        
+        function setEquation(equation) {
+            document.getElementById('equation-input').value = equation;
+        }
+        
+        function plotGraph() {
+            const equation = document.getElementById('equation-input').value.trim();
+            const xMin = parseFloat(document.getElementById('x-min').value);
+            const xMax = parseFloat(document.getElementById('x-max').value);
+            
+            if (!equation) {
+                alert('กรุณาป้อนสมการ');
+                return;
+            }
+            
+            if (isNaN(xMin) || isNaN(xMax) || xMin >= xMax) {
+                alert('กรุณาป้อนช่วงค่า x ที่ถูกต้อง (x ต่ำสุด < x สูงสุด)');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('plot-btn-text').textContent = 'กำลังวาด...';
+            document.getElementById('plot-loading').classList.remove('hidden');
+            
+            setTimeout(() => {
+                try {
+                    // Store base range
+                    baseXRange = [xMin, xMax];
+                    
+                    // Generate x values
+                    const x = [];
+                    const y = [];
+                    const step = (xMax - xMin) / 2000; // Increased resolution
+                    
+                    for (let i = xMin; i <= xMax; i += step) {
+                        x.push(i);
+                        try {
+                            const result = evaluateExpression(equation, i);
+                            y.push(isFinite(result) && !isNaN(result) ? result : null);
+                        } catch (e) {
+                            y.push(null);
+                        }
+                    }
+                    
+                    // Check if we have valid data points
+                    const validPoints = y.filter(val => val !== null).length;
+                    if (validPoints === 0) {
+                        throw new Error('ไม่สามารถคำนวณค่าได้ในช่วงที่กำหนด');
+                    }
+                    
+                    // Store current graph data
+                    currentGraphData = { x, y, equation };
+                    
+                    // Calculate base Y range
+                    const validY = y.filter(val => val !== null && isFinite(val));
+                    const minY = Math.min(...validY);
+                    const maxY = Math.max(...validY);
+                    const yPadding = (maxY - minY) * 0.1;
+                    baseYRange = [minY - yPadding, maxY + yPadding];
+                    
+                    // Plot with Plotly
+                    const trace = {
+                        x: x,
+                        y: y,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: `y = ${equation}`,
+                        line: { 
+                            color: '#0B57A4', 
+                            width: 3 
+                        },
+                        connectgaps: false
+                    };
+                    
+                    const layout = {
+                        title: {
+                            text: `กราฟของ y = ${equation}`,
+                            font: { size: 18 }
+                        },
+                        xaxis: { 
+                            title: 'x', 
+                            gridcolor: '#e5e5e5',
+                            zeroline: true,
+                            zerolinecolor: '#999',
+                            zerolinewidth: 2,
+                            range: baseXRange
+                        },
+                        yaxis: { 
+                            title: 'y', 
+                            gridcolor: '#e5e5e5',
+                            zeroline: true,
+                            zerolinecolor: '#999',
+                            zerolinewidth: 2,
+                            range: baseYRange
+                        },
+                        plot_bgcolor: '#fafafa',
+                        paper_bgcolor: 'white',
+                        margin: { t: 60, r: 20, b: 60, l: 60 },
+                        autosize: true,
+                        width: null,
+                        height: 400
+                    };
+                    
+                    const config = {
+                        responsive: true,
+                        displayModeBar: true,
+                        modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d', 'autoScale2d'],
+                        displaylogo: false
+                    };
+                    
+                    // Clear the container first
+                    const container = document.getElementById('graph-container');
+                    container.innerHTML = '';
+                    container.style.display = 'block';
+                    
+                    Plotly.newPlot('graph-container', [trace], layout, config);
+                    
+                    // Show interactive controls
+                    document.getElementById('graph-controls').classList.remove('hidden');
+                    setupSliderListeners();
+                    
+                    // Track graph creation
+                    trackGraphCreation();
+                    
+                    // Show graph info with analysis
+                    const analysis = analyzeFunction(equation, x, y);
+                    document.getElementById('graph-info').classList.remove('hidden');
+                    document.getElementById('graph-details').innerHTML = `
+                        <p><strong>สมการ:</strong> y = ${equation}</p>
+                        <p><strong>ช่วง x:</strong> ${xMin} ถึง ${xMax}</p>
+                        <p><strong>จำนวนจุดที่คำนวณ:</strong> ${validPoints} จุด</p>
+                        ${analysis}
+                    `;
+                    
+                } catch (error) {
+                    alert(`เกิดข้อผิดพลาด: ${error.message || 'กรุณาตรวจสอบสมการ'}`);
+                    console.error('Graph plotting error:', error);
+                } finally {
+                    // Hide loading
+                    document.getElementById('plot-btn-text').textContent = 'วาดกราฟ';
+                    document.getElementById('plot-loading').classList.add('hidden');
+                }
+            }, 100);
+        }
+        
+        function setupSliderListeners() {
+            // Zoom slider
+            const zoomSlider = document.getElementById('zoom-slider');
+            const zoomValue = document.getElementById('zoom-value');
+            
+            zoomSlider.addEventListener('input', function() {
+                const zoom = parseFloat(this.value);
+                zoomValue.textContent = zoom.toFixed(1) + 'x';
+                updateGraphView();
+            });
+            
+            // Pan sliders
+            const panXSlider = document.getElementById('pan-x-slider');
+            const panXValue = document.getElementById('pan-x-value');
+            
+            panXSlider.addEventListener('input', function() {
+                const panX = parseFloat(this.value);
+                panXValue.textContent = panX.toFixed(1);
+                updateGraphView();
+            });
+            
+            const panYSlider = document.getElementById('pan-y-slider');
+            const panYValue = document.getElementById('pan-y-value');
+            
+            panYSlider.addEventListener('input', function() {
+                const panY = parseFloat(this.value);
+                panYValue.textContent = panY.toFixed(1);
+                updateGraphView();
+            });
+        }
+        
+        function updateGraphView() {
+            if (!currentGraphData || !baseXRange || !baseYRange) return;
+            
+            const zoom = parseFloat(document.getElementById('zoom-slider').value);
+            const panX = parseFloat(document.getElementById('pan-x-slider').value);
+            const panY = parseFloat(document.getElementById('pan-y-slider').value);
+            
+            // Calculate new ranges
+            const xCenter = (baseXRange[0] + baseXRange[1]) / 2 + panX;
+            const yCenter = (baseYRange[0] + baseYRange[1]) / 2 + panY;
+            
+            const xRange = (baseXRange[1] - baseXRange[0]) / zoom;
+            const yRange = (baseYRange[1] - baseYRange[0]) / zoom;
+            
+            const newXRange = [xCenter - xRange/2, xCenter + xRange/2];
+            const newYRange = [yCenter - yRange/2, yCenter + yRange/2];
+            
+            // Update the plot
+            Plotly.relayout('graph-container', {
+                'xaxis.range': newXRange,
+                'yaxis.range': newYRange
+            });
+        }
+        
+        function updateGraphRange() {
+            if (currentGraphData) {
+                plotGraph(); // Redraw with new range
+            }
+        }
+        
+        function resetControls() {
+            document.getElementById('zoom-slider').value = 1;
+            document.getElementById('zoom-value').textContent = '1.0x';
+            document.getElementById('pan-x-slider').value = 0;
+            document.getElementById('pan-x-value').textContent = '0';
+            document.getElementById('pan-y-slider').value = 0;
+            document.getElementById('pan-y-value').textContent = '0';
+            
+            if (currentGraphData && baseXRange && baseYRange) {
+                Plotly.relayout('graph-container', {
+                    'xaxis.range': baseXRange,
+                    'yaxis.range': baseYRange
+                });
+            }
+        }
+        
+        function evaluateExpression(expr, x) {
+            // Enhanced expression evaluator with better error handling
+            let expression = expr.trim();
+            
+            // Handle common mathematical notation
+            expression = expression.replace(/\^/g, '**');
+            
+            // Replace x with the actual value, being careful about context
+            expression = expression.replace(/\bx\b/g, `(${x})`);
+            
+            // Replace mathematical constants
+            expression = expression.replace(/\bpi\b/gi, 'Math.PI');
+            expression = expression.replace(/\be\b/g, 'Math.E');
+            
+            // Handle mathematical functions - be more careful with replacements
+            expression = expression.replace(/\bsin\s*\(/gi, 'Math.sin(');
+            expression = expression.replace(/\bcos\s*\(/gi, 'Math.cos(');
+            expression = expression.replace(/\btan\s*\(/gi, 'Math.tan(');
+            expression = expression.replace(/\basin\s*\(/gi, 'Math.asin(');
+            expression = expression.replace(/\bacos\s*\(/gi, 'Math.acos(');
+            expression = expression.replace(/\batan\s*\(/gi, 'Math.atan(');
+            
+            // Logarithmic and exponential functions
+            expression = expression.replace(/\blog\s*\(/gi, 'Math.log10(');
+            expression = expression.replace(/\bln\s*\(/gi, 'Math.log(');
+            expression = expression.replace(/\bexp\s*\(/gi, 'Math.exp(');
+            expression = expression.replace(/\bsqrt\s*\(/gi, 'Math.sqrt(');
+            expression = expression.replace(/\babs\s*\(/gi, 'Math.abs(');
+            
+            // Handle implicit multiplication more carefully
+            expression = expression.replace(/(\d)\s*\(/g, '$1*(');
+            expression = expression.replace(/\)\s*(\d)/g, ')*$1');
+            expression = expression.replace(/(\d)\s*([a-zA-Z])/g, '$1*$2');
+            expression = expression.replace(/([a-zA-Z])\s*(\d)/g, '$1*$2');
+            
+            // Handle Math.function calls that might have been created
+            expression = expression.replace(/Math\.Math\./g, 'Math.');
+            
+            try {
+                const result = eval(expression);
+                return result;
+            } catch (e) {
+                console.warn('Expression evaluation error:', e, 'Expression:', expression);
+                throw new Error('ไม่สามารถคำนวณสมการได้');
+            }
+        }
+        
+        function analyzeFunction(equation, xValues, yValues) {
+            const validY = yValues.filter(y => y !== null && isFinite(y));
+            if (validY.length === 0) return '';
+            
+            const minY = Math.min(...validY);
+            const maxY = Math.max(...validY);
+            const range = maxY - minY;
+            
+            let analysis = `<div class="mt-3 pt-3 border-t">
+                <p class="font-semibold mb-2">การวิเคราะห์กราฟ:</p>
+                <p><strong>ค่า y ต่ำสุด:</strong> ${minY.toFixed(3)}</p>
+                <p><strong>ค่า y สูงสุด:</strong> ${maxY.toFixed(3)}</p>
+                <p><strong>ช่วงค่า y:</strong> ${range.toFixed(3)}</p>`;
+            
+            // Simple pattern detection
+            if (equation.includes('x^2') || equation.includes('x**2')) {
+                analysis += `<p><strong>ประเภท:</strong> ฟังก์ชันกำลังสอง (พาราโบลา)</p>`;
+            } else if (equation.includes('sin') || equation.includes('cos')) {
+                analysis += `<p><strong>ประเภท:</strong> ฟังก์ชันตรีโกณมิติ</p>`;
+            } else if (equation.includes('x^3') || equation.includes('x**3')) {
+                analysis += `<p><strong>ประเภท:</strong> ฟังก์ชันกำลังสาม</p>`;
+            } else if (!equation.includes('^') && !equation.includes('**') && !equation.includes('sin') && !equation.includes('cos')) {
+                analysis += `<p><strong>ประเภท:</strong> ฟังก์ชันเชิงเส้น</p>`;
+            }
+            
+            analysis += `</div>`;
+            return analysis;
+        }
+        
+        function resetZoom() {
+            Plotly.relayout('graph-container', {
+                'xaxis.autorange': true,
+                'yaxis.autorange': true
+            });
+        }
+        
+        function downloadGraph() {
+            Plotly.downloadImage('graph-container', {
+                format: 'png',
+                width: 800,
+                height: 600,
+                filename: 'graph'
+            });
+        }
+        
+        // Quiz functions
+        const quizData = {
+            'quadratic': {
+                title: 'แบบฝึกหัด: ฟังก์ชันกำลังสอง',
+                timeLimit: 15,
+                questions: [
+                    {
+                        question: 'จุดยอดของพาราโบลา $y = x^2 - 4x + 3$ อยู่ที่จุดใด?',
+                        type: 'multiple-choice',
+                        options: ['(2, -1)', '(-2, 1)', '(4, 3)', '(1, 0)'],
+                        correct: 0
+                    },
+                    {
+                        question: 'ค่าดิสคริมิแนนต์ของสมการ $x^2 - 5x + 6 = 0$ เท่ากับเท่าใด?',
+                        type: 'multiple-choice',
+                        options: ['1', '4', '9', '25'],
+                        correct: 0
+                    }
+                ]
+            },
+            'linear': {
+                title: 'แบบฝึกหัด: ฟังก์ชันเชิงเส้น',
+                timeLimit: 12,
+                questions: [
+                    {
+                        question: 'ความชันของเส้นตรงที่ผ่านจุด (1, 2) และ (3, 8) เท่ากับเท่าใด?',
+                        type: 'multiple-choice',
+                        options: ['2', '3', '4', '6'],
+                        correct: 1
+                    }
+                ]
+            }
+        };
+        
+        function startQuiz(quizType) {
+            currentQuiz = quizData[quizType];
+            if (!currentQuiz) return;
+            
+            currentQuestionIndex = 0;
+            userAnswers = new Array(currentQuiz.questions.length).fill(null);
+            
+            // Hide selection, show active quiz
+            document.getElementById('quiz-selection').classList.add('hidden');
+            document.getElementById('quiz-active').classList.remove('hidden');
+            
+            // Set title and start timer
+            document.getElementById('quiz-title').textContent = currentQuiz.title;
+            startQuizTimer(currentQuiz.timeLimit * 60);
+            
+            // Load first question
+            loadQuestion();
+        }
+        
+        function loadQuestion() {
+            const question = currentQuiz.questions[currentQuestionIndex];
+            const container = document.getElementById('question-container');
+            
+            // Update progress
+            document.getElementById('quiz-progress').textContent = 
+                `ข้อ ${currentQuestionIndex + 1} จาก ${currentQuiz.questions.length}`;
+            
+            let html = `
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4">ข้อ ${currentQuestionIndex + 1}</h3>
+                    <p class="mb-4">${question.question}</p>
+            `;
+            
+            if (question.type === 'multiple-choice') {
+                html += '<div class="space-y-2">';
+                question.options.forEach((option, index) => {
+                    const checked = userAnswers[currentQuestionIndex] === index ? 'checked' : '';
+                    html += `
+                        <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="radio" name="answer" value="${index}" ${checked} class="mr-3">
+                            <span>${option}</span>
+                        </label>
+                    `;
+                });
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+            
+            // Add event listeners for answers
+            document.querySelectorAll('input[name="answer"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    userAnswers[currentQuestionIndex] = parseInt(this.value);
+                });
+            });
+            
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            document.getElementById('next-btn').textContent = 
+                currentQuestionIndex === currentQuiz.questions.length - 1 ? 'ส่งคำตอบ' : 'ถัดไป';
+            
+            // Re-render MathJax
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+        
+        function nextQuestion() {
+            if (currentQuestionIndex < currentQuiz.questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+        
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+        
+        function startQuizTimer(seconds) {
+            let timeLeft = seconds;
+            const timerElement = document.getElementById('quiz-timer');
+            
+            quizTimer = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                timerElement.textContent = `${minutes}:${secs.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(quizTimer);
+                    finishQuiz();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+        
+        function finishQuiz() {
+            clearInterval(quizTimer);
+            
+            // Calculate score
+            let correct = 0;
+            currentQuiz.questions.forEach((question, index) => {
+                if (userAnswers[index] === question.correct) {
+                    correct++;
+                }
+            });
+            
+            const percentage = Math.round((correct / currentQuiz.questions.length) * 100);
+            
+            // Track quiz completion
+            const quizType = Object.keys(quizData).find(key => quizData[key] === currentQuiz);
+            if (quizType) {
+                trackQuizCompletion(quizType, percentage);
+            }
+            
+            // Hide active quiz, show results
+            document.getElementById('quiz-active').classList.add('hidden');
+            document.getElementById('quiz-results').classList.remove('hidden');
+            
+            // Display results
+            document.getElementById('score-display').textContent = `${percentage}%`;
+            document.getElementById('score-details').textContent = 
+                `ตอบถูก ${correct} ข้อ จาก ${currentQuiz.questions.length} ข้อ`;
+        }
+        
+        function resetQuiz() {
+            // Reset all quiz states
+            document.getElementById('quiz-results').classList.add('hidden');
+            document.getElementById('quiz-active').classList.add('hidden');
+            document.getElementById('quiz-selection').classList.remove('hidden');
+            
+            currentQuiz = null;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            
+            if (quizTimer) {
+                clearInterval(quizTimer);
+                quizTimer = null;
+            }
+        }
+        
+        // Contact form
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            const message = document.getElementById('contact-message').value;
+            
+            // Basic validation
+            if (!name || !email || !message) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+            
+            if (!email.includes('@')) {
+                alert('กรุณากรอกอีเมลที่ถูกต้อง');
+                return;
+            }
+            
+            // Show success message (in real app, this would send to server)
+            document.getElementById('contact-success').classList.remove('hidden');
+            this.reset();
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('contact-success').classList.add('hidden');
+            }, 5000);
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('mobile-menu').classList.contains('hidden') === false) {
+                document.getElementById('mobile-menu').classList.add('hidden');
+                document.getElementById('mobile-menu-btn').setAttribute('aria-expanded', 'false');
+            }
+        });
+        
+        // Authentication functions
+        function login(email, password) {
+            // Simulate login (in real app, this would call server API)
+            const users = JSON.parse(localStorage.getItem('mathtx_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('mathtx_current_user', JSON.stringify(user));
+                loadUserProgress();
+                updateAuthUI();
+                showSection('home');
+                return true;
+            }
+            return false;
+        }
+        
+        function register(userData) {
+            // Simulate registration (in real app, this would call server API)
+            const users = JSON.parse(localStorage.getItem('mathtx_users') || '[]');
+            
+            // Check if email already exists
+            if (users.find(u => u.email === userData.email)) {
+                return { success: false, message: 'อีเมลนี้ถูกใช้งานแล้ว' };
+            }
+            
+            // Create new user
+            const newUser = {
+                id: Date.now().toString(),
+                name: userData.name,
+                email: userData.email,
+                password: userData.password,
+                grade: userData.grade,
+                joinDate: new Date().toISOString(),
+                progress: {
+                    lessonsCompleted: [],
+                    quizzesCompleted: [],
+                    graphsCreated: 0,
+                    totalScore: 0,
+                    quizCount: 0
+                }
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('mathtx_users', JSON.stringify(users));
+            
+            return { success: true, user: newUser };
+        }
+        
+        function logout() {
+            currentUser = null;
+            userProgress = {
+                lessonsCompleted: [],
+                quizzesCompleted: [],
+                graphsCreated: 0,
+                totalScore: 0,
+                quizCount: 0
+            };
+            localStorage.removeItem('mathtx_current_user');
+            updateAuthUI();
+            showSection('home');
+        }
+        
+        function updateAuthUI() {
+            const userMenu = document.getElementById('user-menu');
+            const authButtons = document.getElementById('auth-buttons');
+            const mobileUserMenu = document.getElementById('mobile-user-menu');
+            const mobileAuthButtons = document.getElementById('mobile-auth-buttons');
+            const profileNav = document.getElementById('profile-nav');
+            const mobileProfileNav = document.getElementById('mobile-profile-nav');
+            
+            if (currentUser) {
+                // Show user menu, hide auth buttons
+                userMenu.classList.remove('hidden');
+                authButtons.classList.add('hidden');
+                mobileUserMenu.classList.remove('hidden');
+                mobileAuthButtons.classList.add('hidden');
+                profileNav.classList.remove('hidden');
+                mobileProfileNav.classList.remove('hidden');
+                
+                // Update user name displays
+                document.getElementById('user-name').textContent = currentUser.name;
+                document.getElementById('mobile-user-name').textContent = currentUser.name;
+            } else {
+                // Show auth buttons, hide user menu
+                userMenu.classList.add('hidden');
+                authButtons.classList.remove('hidden');
+                mobileUserMenu.classList.add('hidden');
+                mobileAuthButtons.classList.remove('hidden');
+                profileNav.classList.add('hidden');
+                mobileProfileNav.classList.add('hidden');
+            }
+        }
+        
+        function loadUserProgress() {
+            if (currentUser && currentUser.progress) {
+                userProgress = { ...currentUser.progress };
+                updateProgressDisplay();
+            }
+        }
+        
+        function saveUserProgress() {
+            if (currentUser) {
+                currentUser.progress = { ...userProgress };
+                
+                // Update in localStorage
+                const users = JSON.parse(localStorage.getItem('mathtx_users') || '[]');
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                if (userIndex !== -1) {
+                    users[userIndex] = currentUser;
+                    localStorage.setItem('mathtx_users', JSON.stringify(users));
+                    localStorage.setItem('mathtx_current_user', JSON.stringify(currentUser));
+                }
+            }
+        }
+        
+        function updateProgressDisplay() {
+            if (currentSection === 'profile') {
+                // Update profile info
+                document.getElementById('profile-name').textContent = currentUser?.name || '';
+                document.getElementById('profile-email').textContent = currentUser?.email || '';
+                document.getElementById('profile-grade').textContent = getGradeText(currentUser?.grade) || '';
+                document.getElementById('profile-joined').textContent = currentUser ? 
+                    new Date(currentUser.joinDate).toLocaleDateString('th-TH') : '';
+                
+                // Update progress stats
+                const totalLessons = 10;
+                const completedLessons = userProgress.lessonsCompleted.length;
+                const progressPercentage = (completedLessons / totalLessons) * 100;
+                
+                document.getElementById('lessons-completed').textContent = `${completedLessons}/${totalLessons}`;
+                document.getElementById('lessons-progress').style.width = `${progressPercentage}%`;
+                document.getElementById('quizzes-completed').textContent = userProgress.quizCount.toString();
+                document.getElementById('average-score').textContent = userProgress.quizCount > 0 ? 
+                    Math.round(userProgress.totalScore / userProgress.quizCount) + '%' : '-';
+                document.getElementById('graphs-created').textContent = userProgress.graphsCreated.toString();
+            }
+        }
+        
+        function getGradeText(grade) {
+            const gradeMap = {
+                'm4': 'ม.4',
+                'm5': 'ม.5',
+                'm6': 'ม.6',
+                'other': 'อื่นๆ'
+            };
+            return gradeMap[grade] || '';
+        }
+        
+        function trackLessonCompletion(lessonId) {
+            if (currentUser && !userProgress.lessonsCompleted.includes(lessonId)) {
+                userProgress.lessonsCompleted.push(lessonId);
+                saveUserProgress();
+                addActivity(`เรียนจบบทเรียน: ${lessonId}`);
+            }
+        }
+        
+        function trackQuizCompletion(quizType, score) {
+            if (currentUser) {
+                userProgress.quizzesCompleted.push({
+                    type: quizType,
+                    score: score,
+                    date: new Date().toISOString()
+                });
+                userProgress.totalScore += score;
+                userProgress.quizCount += 1;
+                saveUserProgress();
+                addActivity(`ทำแบบฝึกหัด ${quizType} ได้คะแนน ${score}%`);
+            }
+        }
+        
+        function trackGraphCreation() {
+            if (currentUser) {
+                userProgress.graphsCreated += 1;
+                saveUserProgress();
+                addActivity('วาดกราฟใหม่');
+            }
+        }
+        
+        function addActivity(activity) {
+            if (currentUser) {
+                if (!currentUser.recentActivity) {
+                    currentUser.recentActivity = [];
+                }
+                currentUser.recentActivity.unshift({
+                    text: activity,
+                    date: new Date().toISOString()
+                });
+                // Keep only last 10 activities
+                currentUser.recentActivity = currentUser.recentActivity.slice(0, 10);
+                saveUserProgress();
+            }
+        }
+        
+        // Form handlers
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const errorDiv = document.getElementById('login-error');
+            
+            if (login(email, password)) {
+                // Success - redirect handled in login function
+                errorDiv.classList.add('hidden');
+            } else {
+                errorDiv.textContent = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+                errorDiv.classList.remove('hidden');
+            }
+        });
+        
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const grade = document.getElementById('register-grade').value;
+            const acceptTerms = document.getElementById('accept-terms').checked;
+            
+            const errorDiv = document.getElementById('register-error');
+            const successDiv = document.getElementById('register-success');
+            
+            // Validation
+            if (!acceptTerms) {
+                errorDiv.textContent = 'กรุณายอมรับเงื่อนไขการใช้งาน';
+                errorDiv.classList.remove('hidden');
+                successDiv.classList.add('hidden');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                errorDiv.textContent = 'รหัสผ่านไม่ตรงกัน';
+                errorDiv.classList.remove('hidden');
+                successDiv.classList.add('hidden');
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorDiv.textContent = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
+                errorDiv.classList.remove('hidden');
+                successDiv.classList.add('hidden');
+                return;
+            }
+            
+            const result = register({ name, email, password, grade });
+            
+            if (result.success) {
+                successDiv.textContent = 'สมัครสมาชิกสำเร็จ! กำลังเข้าสู่ระบบ...';
+                successDiv.classList.remove('hidden');
+                errorDiv.classList.add('hidden');
+                
+                // Auto login after successful registration
+                setTimeout(() => {
+                    login(email, password);
+                }, 1500);
+            } else {
+                errorDiv.textContent = result.message;
+                errorDiv.classList.remove('hidden');
+                successDiv.classList.add('hidden');
+            }
+        });
+        
+        // Check for existing session on load
+        function checkExistingSession() {
+            const savedUser = localStorage.getItem('mathtx_current_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                loadUserProgress();
+                updateAuthUI();
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkExistingSession();
+            showSection('home');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9811623ed7328bc5',t:'MTc1ODIwNDE3NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
